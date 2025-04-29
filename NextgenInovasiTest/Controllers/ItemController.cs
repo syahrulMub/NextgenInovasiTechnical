@@ -80,7 +80,7 @@ public class ItemController : BaseController
         }
         // await _itemBusinessLogic.AddBacth(dataItem, 1);
         // return Ok("Data inserted successfully");
-        return await HandleResponse(async () => await _itemBusinessLogic.AddBacth(dataItem, 1));
+        return await HandleResponse(async () => await _itemBusinessLogic.AddBacth(dataItem, userId));
     }
 
     #region ::: Helper

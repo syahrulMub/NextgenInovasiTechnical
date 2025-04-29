@@ -1,22 +1,42 @@
 using Hangfire;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using NextgenInovasiTest.DatabaseContext;
 
 namespace NextgenInovasiTest.HangfireJobScheduler;
 
-public static class HangfireJobScheduler
+public class HangfireJobScheduler
 {
-    public static void RegisterJobs()
+    private readonly ApplicationDbContext _context;
+    private readonly IEmailSender _emailSender;
+    public HangfireJobScheduler(ApplicationDbContext context, IEmailSender emailSender)
     {
-        RecurringJob.AddOrUpdate<IEmailSender>(
-            "send-minutes-report",
-            sender => sender.SendEmailAsync("syahrul.mubarrok2@gmail.com", "daily Minutely", "this is Minutely job"),
-            Cron.Minutely
-        );
-        RecurringJob.AddOrUpdate<IEmailSender>(
+        _emailSender = emailSender;
+        _context = context;
+    }
+    public async Task SendDailyReport()
+    {
+        var users = _context.Users.ToList();
+        var EmailTemplate = _context.EmailTemplates.FirstOrDefault(x => x.EmailCode == "DAILY_REPORT");
 
-    "send-daily-report",
-        sender => sender.SendEmailAsync("syahrul.mubarrok2@gmail.com", "daily job at 8 ", "this is daily job"),
-         "0 8 * * *"
-        );
+        foreach (var user in users)
+        {
+            string subject = EmailTemplate.Subject;
+            string body = EmailTemplate.Body.Replace("{username}", user.UserName);
+            await _emailSender.SendEmailAsync(user.Email, subject, body);
+        }
+    }
+
+    public async Task SendMonthlyReport()
+    {
+        var users = _context.Users.ToList();
+        var EmailTemplate = _context.EmailTemplates.FirstOrDefault(x => x.EmailCode == "MONTHLY_SUMMARY");
+
+        foreach (var user in users)
+        {
+            string? subject = EmailTemplate?.Subject;
+            string? body = EmailTemplate?.Body.Replace("{username}", user.UserName);
+            await _emailSender.SendEmailAsync(user.Email, subject, body);
+        }
+
     }
 }

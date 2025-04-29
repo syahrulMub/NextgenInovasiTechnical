@@ -9,6 +9,6 @@ public class BaseEntity : IEntity
     public bool isActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
-    public int CreatedBy { get; set; }
-    public int UpdatedBy { get; set; }
+    public string? CreatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
 }

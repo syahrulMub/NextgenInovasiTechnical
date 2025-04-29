@@ -8,6 +8,6 @@ public interface IEntity
     bool isActive { get; set; }
     DateTime CreatedAt { get; set; }
     DateTime UpdatedAt { get; set; }
-    int CreatedBy { get; set; }
-    int UpdatedBy { get; set; }
+    string CreatedBy { get; set; }
+    string UpdatedBy { get; set; }
 }

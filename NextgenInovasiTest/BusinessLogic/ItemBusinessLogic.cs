@@ -27,7 +27,7 @@ public class ItemBusinessLogic : IBusinessLogic<Item>
             .Where(i => i.Id == id && (includeDeleted || !i.isActive))
             .FirstOrDefaultAsync();
     }
-    public async Task<Item> AddAsync(Item entity, int userId)
+    public async Task<Item> AddAsync(Item entity, string userId)
     {
         entity.isActive = true;
         entity.CreatedBy = userId;
@@ -36,7 +36,7 @@ public class ItemBusinessLogic : IBusinessLogic<Item>
         await _context.SaveChangesAsync();
         return entity;
     }
-    public async Task<Item> UpdateAsync(Item entity, int userId)
+    public async Task<Item> UpdateAsync(Item entity, string userId)
     {
         entity.UpdatedBy = userId;
         _context.Items.Update(entity);
@@ -63,7 +63,7 @@ public class ItemBusinessLogic : IBusinessLogic<Item>
             await _context.SaveChangesAsync();
         }
     }
-    public async Task AddBacth(List<Item> entities, int userId)
+    public async Task AddBacth(List<Item> entities, string userId)
     {
         foreach (var entity in entities)
         {

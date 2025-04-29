@@ -24,6 +24,7 @@ builder.Services.AddDefaultIdentity<User>
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<HangfireJobScheduler>();
 
 builder.Services.AddScoped<IBusinessLogic<Item>, ItemBusinessLogic>();
 
@@ -73,11 +74,16 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseHangfireDashboard();
-
-using (var scope = app.Services.CreateScope())
-{
-    HangfireJobScheduler.RegisterJobs();
-}
+RecurringJob.AddOrUpdate<HangfireJobScheduler>(
+    "send-daily-report",
+    job => job.SendDailyReport(),
+    "0 8 * * *"
+);
+RecurringJob.AddOrUpdate<HangfireJobScheduler>(
+    "send-minutes-report",
+    job => job.SendMonthlyReport(),
+    Cron.Minutely
+);
 
 app.UseRouting();
 
