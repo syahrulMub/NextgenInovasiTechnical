@@ -9,7 +9,7 @@ I have implemented the authentication feature using **ASP.NET Identity**, which 
 
 The password reset request is sent through email using SMTP configured with **MailKit**.
 
-2FA login can also use **QR Code**, which I have displayed on the user's profile page within the web application.
+2FA login can also use **QR Code**, accessible via the user's profile > Two-Factor Authenticator.
 
 *note : the OTP via email not yet implement*
 
@@ -21,7 +21,7 @@ The password reset request is sent through email using SMTP configured with **Ma
 - I have built a feature that accepts Excel file uploads.
 - I used the **NPOI** package to read the Excel data.
 - Uploaded data is successfully saved to the database.
-- A downloadable Excel template is also matching with database columns.
+- A download Excel template Feature is also implement and matching with database columns.
 
 ### 📥 Download / Export Transaction Menu
 - Uploaded data is shown on the web application using a data table.
@@ -37,11 +37,11 @@ The password reset request is sent through email using SMTP configured with **Ma
 
 ## ⏰ 3. Email Notification Reminder via Background Scheduler
 
-I have implemented notification and reminder functionality (such as meeting reminders and alarms) using **Hangfire**.
+I have implemented notification and reminder demo (daily and monthly) using **Hangfire**.
 - Email templates stored in the database
 - User-specific email configuration
 
-> While this implementation is not yet fully dynamic, it meets the current requirements. It could be extended using an **EmailQueue** system for better flexibility, but this would involve more advanced configuration. For now, using `User` and `EmailTemplate` tables provides a practical and effective solution.
+> While this implementation is not yet fully dynamic, it meets the current requirements. It could be extended using an **EmailQueue** system for better flexibility, but this would more advanced configuration. For now, using `User` and `EmailTemplate` tables provides a practical and effective solution.
 
 ---
 
