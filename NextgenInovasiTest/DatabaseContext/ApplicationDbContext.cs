@@ -11,6 +11,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     }
 
     public DbSet<Item> Items { get; set; }
+    public DbSet<EmailTemplate> EmailTemplates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

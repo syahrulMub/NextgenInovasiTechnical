@@ -11,7 +11,7 @@ public class BaseController : Controller
     {
         _logger = logger;
     }
-    public async Task<JsonResult> HandleResponse(Func<Task<IEntity>> action)
+    public async Task<JsonResult> HandleResponse<TResult>(Func<Task<TResult>> action)
     {
         try
         {
@@ -27,17 +27,20 @@ public class BaseController : Controller
             };
         }
     }
-    public async Task<IActionResult> HandleResponse(Func<Task> action)
+    public async Task<JsonResult> HandleResponse(Func<Task> action)
     {
         try
         {
             await action();
-            return Ok();
+            return new JsonResult(new { success = true });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while processing the request.");
-            return StatusCode(500, "Internal server error");
+            return new JsonResult(new { error = "Internal server error" })
+            {
+                StatusCode = 500
+            };
         }
     }
 }

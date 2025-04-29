@@ -31,16 +31,36 @@ builder.Services.AddHangfire(x => x.UseMemoryStorage());
 builder.Services.AddHangfireServer();
 
 builder.Services.AddRazorPages();
+
 builder.Services.AddAuthentication()
 .AddCookie(options =>
 {
-    options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
-    options.SlidingExpiration = false;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 });
 
 builder.Services.AddAuthorization();
 
+
+//add session
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = ".AspNetCore.Identity.Application";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+    options.ReturnUrlParameter = "/Home";
+    options.SlidingExpiration = false;
+});
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.Cookie.IsEssential = true;
+});
+
+
 var app = builder.Build();
+
+CreateAdminOnDatabase.CreateAdminDataOnDatabase(app);
+CreateRoleOnDatabase.CreateRole(app);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -56,7 +76,7 @@ app.UseHangfireDashboard();
 
 using (var scope = app.Services.CreateScope())
 {
-    // HangfireJobScheduler.RegisterJobs();
+    HangfireJobScheduler.RegisterJobs();
 }
 
 app.UseRouting();

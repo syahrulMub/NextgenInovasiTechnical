@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NextgenInovasiTest.BusinessLogic;
 using NextgenInovasiTest.Models;
@@ -7,14 +8,16 @@ using NPOI.XSSF.UserModel;
 
 namespace NextgenInovasiTest.Controllers;
 
-public class ItemController : Controller
+public class ItemController : BaseController
 {
     private readonly ILogger<ItemController> _logger;
     private readonly IBusinessLogic<Item> _itemBusinessLogic;
-    public ItemController(ILogger<ItemController> logger, IBusinessLogic<Item> itemBusinessLogic)
+    private readonly UserManager<User> _user;
+    public ItemController(ILogger<ItemController> logger, IBusinessLogic<Item> itemBusinessLogic, UserManager<User> user) : base(logger)
     {
         _logger = logger;
         _itemBusinessLogic = itemBusinessLogic;
+        _user = user;
     }
 
     [Authorize]
@@ -26,9 +29,9 @@ public class ItemController : Controller
     [HttpGet("Item/GetAll")]
     public async Task<JsonResult> GetAll()
     {
-        var data = await _itemBusinessLogic.GetAllAsync();
-        return Json(data);
-        // return await HandleResponse(async () => await _itemBusinessLogic.GetAllAsync());
+        // var data = await _itemBusinessLogic.GetAllAsync();
+        // return Json(data);
+        return await HandleResponse(async () => await _itemBusinessLogic.GetAllAsync());
     }
     [Authorize]
     [HttpGet("Item/GetItemTemplate")]
@@ -43,6 +46,7 @@ public class ItemController : Controller
     [HttpPost]
     public async Task<IActionResult> BulkInsert(IFormFile fileBase)
     {
+        var userId = _user.GetUserId(User);
         if (fileBase == null || fileBase.Length == 0)
         {
             return BadRequest("File is empty");
@@ -74,9 +78,9 @@ public class ItemController : Controller
             }
 
         }
-        await _itemBusinessLogic.AddBacth(dataItem, 1);
-        return Ok("Data inserted successfully");
-        // return await HandleResponse(async () => await _itemBusinessLogic.AddBacth(dataItem, 1));
+        // await _itemBusinessLogic.AddBacth(dataItem, 1);
+        // return Ok("Data inserted successfully");
+        return await HandleResponse(async () => await _itemBusinessLogic.AddBacth(dataItem, 1));
     }
 
     #region ::: Helper
