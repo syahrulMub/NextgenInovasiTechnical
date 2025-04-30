@@ -20,7 +20,7 @@ The password reset request is sent through email using SMTP configured with **Ma
 ### 📤 Upload Transaction Menu
 - I have built a feature that accepts Excel file uploads.
 - I used the **NPOI** package to read the Excel data.
-- Uploaded data is successfully saved to the database.
+- Uploaded data will saved to the database.
 - A download Excel template Feature is also implement and matching with database columns.
 
 ### 📥 Download / Export Transaction Menu
@@ -39,7 +39,7 @@ The password reset request is sent through email using SMTP configured with **Ma
 
 I have implemented notification and reminder demo (daily and monthly) using **Hangfire**.
 - Email templates stored in the database
-- User-specific email configuration
+- User email from **ASP.NET Identity**
 
 > While this implementation is not yet fully dynamic, it meets the current requirements. It could be extended using an **EmailQueue** system for better flexibility, but this would more advanced configuration. For now, using `User` and `EmailTemplate` tables provides a practical and effective solution.
 
